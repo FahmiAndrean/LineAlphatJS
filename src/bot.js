@@ -2,8 +2,8 @@ const LineConnect = require('./connect');
 let LINE = require('./main.js');
 
 const auth = {
-	authToken: ' ElypGusUWQlKR2OpUOC3.E481vN+Uaw0zyrias241CW.q8ScOGuCK/2z118TAi1t5QirB8qzuxqlVNeLrKUzqJE=',
-	certificate: '',
+	authToken: ' ElvQ0n7CMoRqn49CXStd.xNY+ICWKI3KF/qZrjjJvJq.x7LtvkVXqQcW9kk5O/QTQKluQPiQj3QbzdzCpRtLAE8=',
+	certificate: '91e161e77216ab71cffd125e5e7994cb9ccdf0f60b5409f22774bd5cebe8536a',
 }
 // let client =  new LineConnect(auth);
 let client =  new LineConnect();
