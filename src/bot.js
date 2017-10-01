@@ -3,7 +3,7 @@ let LINE = require('./main.js');
 
 const auth = {
 	authToken: ' ElvQ0n7CMoRqn49CXStd.xNY+ICWKI3KF/qZrjjJvJq.x7LtvkVXqQcW9kk5O/QTQKluQPiQj3QbzdzCpRtLAE8=',
-	certificate: '91e161e77216ab71cffd125e5e7994cb9ccdf0f60b5409f22774bd5cebe8536a',
+	certificate: '',
 }
 // let client =  new LineConnect(auth);
 let client =  new LineConnect();
