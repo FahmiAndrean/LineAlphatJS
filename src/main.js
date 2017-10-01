@@ -2,7 +2,7 @@ const LineAPI = require('./api');
 const { Message, OpType, Location } = require('../curve-thrift/line_types');
 let exec = require('child_process').exec;
 
-const myBot = ['u78b179f959eba71ec2de09233281c49e','uc93c736a8b385208c2aa7aed58de2ceb','u236b88bf1eac2b90e848a6198152e647','u763977dab29cbd6fa0cbfa9f159b768b'.'u7b8f35567fee016d196112004b6e3573'];
+const myBot = ['u7b8f35567fee016d196112004b6e3573'];
 
 
 function isAdminOrBot(param) {
@@ -209,7 +209,7 @@ class LINE extends LineAPI {
 
         if(txt == 'speed') {
             const curTime = (Date.now() / 1000);
-            await this._sendMessage(seq,'processing....');
+            await this._sendMessage(seq,'Unch Proses Berjalan....');
             const rtime = (Date.now() / 1000) - curTime;
             await this._sendMessage(seq, `${rtime} second`);
         }
