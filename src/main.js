@@ -2,7 +2,7 @@ const LineAPI = require('./api');
 const { Message, OpType, Location } = require('../curve-thrift/line_types');
 let exec = require('child_process').exec;
 
-const myBot = ['u07bea77e0ddbe298a45f2758d834ce48','u79c68416a26d7db88b9d44042dafd4f5','u0e18f39c40973be5f201cc1b00528be4'];
+const myBot = ['u7b8f35567fee016d196112004b6e3573','u5e7cbf89cc248b791ff90cd12498d58d'];
 
 
 function isAdminOrBot(param) {
@@ -204,21 +204,21 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'response' || txt == 'respon') {
-            this._sendMessage(seq, 'Mira');
+            this._sendMessage(seq, 'halo kita crot dulu');
         }
 
 	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Admin]:\n-kick on/off\n-kickall\n-cancel on/off\n-spm\n-left');
+	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Admin]:\n-kick on/off\n-micungur\n-cancel on/off\n-spm\n-left');
 	}
 
         if(txt == 'speed') {
             const curTime = (Date.now() / 1000);
-            await this._sendMessage(seq,'Processing....');
+            await this._sendMessage(seq,'unch proses berjalan....');
             const rtime = (Date.now() / 1000) - curTime;
-            await this._sendMessage(seq, `${rtime} second(s)`);
+            await this._sendMessage(seq, `${rtime} crot`);
         }
 
-        if(txt === 'kickall' && this.stateStatus.kick == 1 && isAdminOrBot(seq.from)) {
+        if(txt === 'micungur' && this.stateStatus.kick == 1 && isAdminOrBot(seq.from)) {
             let { listMember } = await this.searchGroup(seq.to);
             for (var i = 0; i < listMember.length; i++) {
                 if(!isAdminOrBot(listMember[i].mid)){
