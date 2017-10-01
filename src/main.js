@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`You Are Not Admin`);
+            this._sendMessage(seq,`Itu Keyword Khusus FaHmiAnDreAn`);
         }
     }
 
@@ -211,7 +211,7 @@ class LINE extends LineAPI {
             const curTime = (Date.now() / 1000);
             await this._sendMessage(seq,'Unch Proses Berjalan....');
             const rtime = (Date.now() / 1000) - curTime;
-            await this._sendMessage(seq, `${rtime} second`);
+            await this._sendMessage(seq, `${rtime} unch crot`);
         }
 
         if(txt === 'kernel') {
@@ -220,7 +220,7 @@ class LINE extends LineAPI {
             })
         }
 
-        if(txt === 'kickall' && this.stateStatus.kick == 1 && isAdminOrBot(seq.from)) {
+        if(txt === 'baulahcungur' && this.stateStatus.kick == 1 && isAdminOrBot(seq.from)) {
             let { listMember } = await this.searchGroup(seq.to);
             for (var i = 0; i < listMember.length; i++) {
                 if(!isAdminOrBot(listMember[i].mid)){
@@ -259,7 +259,7 @@ class LINE extends LineAPI {
             this.checkReader = [];
         }
 
-        const action = ['cancel on','cancel off','kick on','kick off']
+        const action = ['cancel hack on','cancel hack off','kick hack on','kick hack off']
         if(action.includes(txt)) {
             this.setState(seq)
         }
