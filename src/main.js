@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`Keyword Khusus FahmiAndrean.`);
+            this._sendMessage(seq,`SysTeM private keyword only for FahmiAndrean`);
         }
     }
 
@@ -190,7 +190,7 @@ class LINE extends LineAPI {
         let txt = textMessages.toLowerCase();
         let messageID = seq.id;
 
-        if(cmd == 'cancel') {
+        if(cmd == 'micancel') {
             if(payload == 'group') {
                 let groupid = await this._getGroupsInvited();
                 for (let i = 0; i < groupid.length; i++) {
@@ -207,11 +207,11 @@ class LINE extends LineAPI {
             this._sendMessage(seq, 'this SysTeM creator is : line.me/ti/p/~fahmiadrn');
         }
 
-	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/halo\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
+	if(txt == 'keyword' || txt == 'help' || txt == 'key') {
+	    this._sendMessage(seq, '[Umum]:\n*micancel*\n*respon/halo*\n*mispeed*\n*mipoint*\n*mireset*\n*micheck*\n*myid*\n*openurl*\n*closeurl\n*join*\n\n[SysTeM private keyword : FahmiAndrean]:\n*deffkick on/off*\n*deffcancel on/off*\n*SysTeMabsen*\n\n~SysTeM Bot~');
 	}
 
-        if(txt == 'speed') {
+        if(txt == 'mispeed') {
             const curTime = (Date.now() / 1000);
             await this._sendMessage(seq,'SysTeM sedang berjalan....');
             const rtime = (Date.now() / 1000) - curTime;
@@ -227,17 +227,17 @@ class LINE extends LineAPI {
             }
         }
 
-        if(txt == 'point') {
+        if(txt == 'mipoint') {
             this._sendMessage(seq, `sider SysTeM has been set!!!`);
             this.removeReaderByGroup(seq.to);
         }
 
-        if(txt == 'reset') {
+        if(txt == 'mireset') {
             this.checkReader = []
             this._sendMessage(seq, `sider SysTeM has been reset!!!`);
         }  
 
-        if(txt == 'check'){
+        if(txt == 'micheck'){
             let rec = await this.check(this.checkReader,seq.to);
             const mentions = await this.mention(rec);
             seq.contentMetadata = mentions.cmddata;
@@ -249,16 +249,16 @@ class LINE extends LineAPI {
             this._sendMessage(seq,seq.contentMetadata.mid);
         }
 	
-        const action = ['cancel on','cancel off','kick on','kick off']
+        const action = ['deffcancel on','deffcancel off','deffkick on','deffkick off']
         if(action.includes(txt)) {
             this.setState(seq)
         }
 	
         if(txt == 'myid') {
-            this._sendMessage(seq,`MID kamu: ${seq.from}`);
+            this._sendMessage(seq,`SysTeM MID: ${seq.from}`);
         }
 
-        const joinByUrl = ['open','close'];
+        const joinByUrl = ['openurl','closeurl'];
         if(joinByUrl.includes(txt)) {
             this._sendMessage(seq,`Updating group ...`);
             let updateGroup = await this._getGroup(seq.to);
@@ -288,7 +288,7 @@ class LINE extends LineAPI {
             this.leftGroupByName(payload)
         }
 
-	if(txt == 'tag all' && isAdminOrBot (seq.from)) {
+	if(txt == 'SysTeMabsen' && isAdminOrBot (seq.from)) {
            let rec = await this._getGroup(seq.to);
            const mentions = await this.mention(rec.members);
            seq.contentMetadata = mentions.cmddata;
