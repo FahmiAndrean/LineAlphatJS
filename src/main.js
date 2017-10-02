@@ -208,7 +208,7 @@ class LINE extends LineAPI {
         }
 
 	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancelAll\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
+	    this._sendMessage(seq, '[Umum]:\n-cancelAll\n-respon/halo\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
 	}
 
         if(txt == 'speed') {
