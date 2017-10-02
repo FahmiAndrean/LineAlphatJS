@@ -203,12 +203,12 @@ class LINE extends LineAPI {
             }
         }
 
-        if(txt == 'response' || txt == 'respon') {
+        if(txt == 'halo' || txt == 'respon') {
             this._sendMessage(seq, 'halo kita crot dulu');
         }
 
 	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-spm\n-left');
+	    this._sendMessage(seq, '[Umum]:\n-cancelAll\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
 	}
 
         if(txt == 'speed') {
@@ -288,6 +288,12 @@ class LINE extends LineAPI {
             this.leftGroupByName(payload)
         }
 
+	if(txt == 'tag all' && isAdminOrBot (seq.from)) {
+           let rec = await this._getGroup(seq.to);
+           const mentions = await this.mention(rec.members);
+  seq.contentMetadata = mentions.cmddata;
+           await this._sendMessage(seq,mentions.names.join(''));
+        }
     }
 
 }
