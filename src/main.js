@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`Kamu bukan admin.`);
+            this._sendMessage(seq,`Keyword Khusus FahmiAndrean.`);
         }
     }
 
@@ -208,7 +208,7 @@ class LINE extends LineAPI {
         }
 
 	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Admin]:\n-kick on/off\n-micungur\n-cancel on/off\n-spm\n-left');
+	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/response\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-spm\n-left');
 	}
 
         if(txt == 'speed') {
@@ -228,13 +228,13 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'point') {
-            this._sendMessage(seq, `Read point telah di set!`);
+            this._sendMessage(seq, `Read point has been set!!!`);
             this.removeReaderByGroup(seq.to);
         }
 
         if(txt == 'reset') {
             this.checkReader = []
-            this._sendMessage(seq, `Read point telah di reset!`);
+            this._sendMessage(seq, `Read point has been reset!!!`);
         }  
 
         if(txt == 'check'){
