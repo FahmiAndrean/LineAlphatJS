@@ -204,16 +204,16 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'halo' || txt == 'respon') {
-            this._sendMessage(seq, 'halo kita crot dulu');
+            this._sendMessage(seq, 'this SysTeM creator is : line.me/ti/p/~fahmiadrn');
         }
 
 	if(txt == 'keyword' || txt == 'help') {
-	    this._sendMessage(seq, '[Umum]:\n-cancelAll\n-respon/halo\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
+	    this._sendMessage(seq, '[Umum]:\n-cancel\n-respon/halo\n-speed\n-point\n-reset\n-check\n-myid\n-open\n-close\n-join\n\n[Fahmi]:\n-kick on/off\n-micungur\n-cancel on/off\n-TagAll\n-left');
 	}
 
         if(txt == 'speed') {
             const curTime = (Date.now() / 1000);
-            await this._sendMessage(seq,'unch proses berjalan....');
+            await this._sendMessage(seq,'SysTeM sedang berjalan....');
             const rtime = (Date.now() / 1000) - curTime;
             await this._sendMessage(seq, `${rtime} crot`);
         }
@@ -228,13 +228,13 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'point') {
-            this._sendMessage(seq, `Read point has been set!!!`);
+            this._sendMessage(seq, `sider SysTeM has been set!!!`);
             this.removeReaderByGroup(seq.to);
         }
 
         if(txt == 'reset') {
             this.checkReader = []
-            this._sendMessage(seq, `Read point has been reset!!!`);
+            this._sendMessage(seq, `sider SysTeM has been reset!!!`);
         }  
 
         if(txt == 'check'){
@@ -291,7 +291,7 @@ class LINE extends LineAPI {
 	if(txt == 'tag all' && isAdminOrBot (seq.from)) {
            let rec = await this._getGroup(seq.to);
            const mentions = await this.mention(rec.members);
-  seq.contentMetadata = mentions.cmddata;
+           seq.contentMetadata = mentions.cmddata;
            await this._sendMessage(seq,mentions.names.join(''));
         }
     }
