@@ -263,10 +263,10 @@ class LINE extends LineAPI {
             this._sendMessage(seq,`Updating group ...`);
             let updateGroup = await this._getGroup(seq.to);
             updateGroup.preventJoinByTicket = true;
-            if(txt == 'open') {
+            if(txt == 'openurl') {
                 updateGroup.preventJoinByTicket = false;
                 const groupUrl = await this._reissueGroupTicket(seq.to)
-                this._sendMessage(seq,`line.me/R/ti/g/${groupUrl}`);
+                this._sendMessage(seq,`Line group = line://ti/g/${groupUrl}`);
             }
             await this._updateGroup(updateGroup);
         }
