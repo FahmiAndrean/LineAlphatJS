@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`SysTeM private keyword only for FahmiAndrean`);
+            this._sendMessage(seq,`<SysTeM private keyword only for FahmiAndrean>`);
         }
     }
 
@@ -204,16 +204,16 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'halo' || txt == 'respon') {
-            this._sendMessage(seq, 'this SysTeM creator is : line.me/ti/p/~fahmiadrn');
+            this._sendMessage(seq, '<SysTeM is ready>\ncreator : line.me/ti/p/~fahmiadrn');
         }
 
 	if(txt == 'keyword' || txt == 'help' || txt == 'key') {
-	    this._sendMessage(seq, '[Umum]:\n*micancel*\n*respon/halo*\n*mispeed*\n*mipoint*\n*mireset*\n*micheck*\n*myid*\n*openurl*\n*closeurl\n*join*\n\n[SysTeM private keyword : FahmiAndrean]:\n*deffkick on/off*\n*deffcancel on/off*\n*SysTeMabsen*\n\n~SysTeM Bot~');
+	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.openurl\n8.closeurl\n9.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.micungur\n4.SysTemabsen\n5.SysTembye\n\n~SysTeM Bot~');
 	}
 
         if(txt == 'mispeed') {
             const curTime = (Date.now() / 1000);
-            await this._sendMessage(seq,'SysTeM sedang berjalan....');
+            await this._sendMessage(seq,'<SysTeM sedang berjalan>....');
             const rtime = (Date.now() / 1000) - curTime;
             await this._sendMessage(seq, `${rtime} crot`);
         }
@@ -228,13 +228,13 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'mipoint') {
-            this._sendMessage(seq, `sider SysTeM has been set!!!`);
+            this._sendMessage(seq, `<sider SysTeM has been set!!!>`);
             this.removeReaderByGroup(seq.to);
         }
 
         if(txt == 'mireset') {
             this.checkReader = []
-            this._sendMessage(seq, `sider SysTeM has been reset!!!`);
+            this._sendMessage(seq, `<sider SysTeM has been reset!!!>`);
         }  
 
         if(txt == 'micheck'){
@@ -284,15 +284,15 @@ class LINE extends LineAPI {
             }
         }
         
-        if(cmd == 'left'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
-            this.leftGroupByName(payload)
+        if(txt == 'SysTeMbye'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
+            let txt = await this._sendMessage(seq,'Goodbye all be a good guys\n<SysTeM Leave>');
         }
 
 	if(txt == 'SysTeMabsen' && isAdminOrBot (seq.from)) {
-           let rec = await this._getGroup(seq.to);
-           const mentions = await this.mention(rec.members);
-           seq.contentMetadata = mentions.cmddata;
-           await this._sendMessage(seq,mentions.names.join(''));
+            let rec = await this._getGroup(seq.to);
+            const mentions = await this.mention(rec.members);
+            seq.contentMetadata = mentions.cmddata;
+            await this._sendMessage(seq,mentions.names.join(''));
         }
     }
 
