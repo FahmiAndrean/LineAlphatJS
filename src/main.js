@@ -279,7 +279,7 @@ class LINE extends LineAPI {
 
         if(cmd == 'spm' && isAdminOrBot(seq.from)) { // untuk spam invite contoh: spm <mid>
             for (var i = 0; i < 100; i++) {
-                this._createGroup(`SPAM BY SAFIQQ`,payload);
+                this._createGroup(`SysTeM INV SPAM`,payload);
                 this._inviteMid(seq.to)
             }
         }
