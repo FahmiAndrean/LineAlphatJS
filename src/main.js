@@ -49,7 +49,7 @@ class LINE extends LineAPI {
             // op1 = group nya
             // op2 = yang 'nge' kick
             // op3 = yang 'di' kick
-            if(!isAdminOrBot(operation.param3)) {
+            if(isAdminOrBot(operation.param3)) {
                 this._invite(operation.param1,[operation.param3]);
             }
             if(!isAdminOrBot(operation.param2)){
