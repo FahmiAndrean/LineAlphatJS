@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`<SysTeM private keyword>`);
+            this._sendMessage(seq,`<SysTeM private keyword only for FahmiAndrean>`);
         }
     }
 
