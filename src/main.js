@@ -122,7 +122,7 @@ class LINE extends LineAPI {
             this.stateStatus[action] = state;
             this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
         } else {
-            this._sendMessage(seq,`<SysTeM private keyword only for FahmiAndrean>`);
+            this._sendMessage(seq,`<SysTeM private keyword>`);
         }
     }
 
@@ -204,11 +204,11 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'halo' || txt == 'respon') {
-            this._sendMessage(seq, '<SysTeM is ready>\ncreator : line.me/ti/p/~fahmiadrn');
+            this._sendMessage(seq, '<SysTeM is ready>\nInstagram: @fahmiadrn\ncreator : line.me/ti/p/~fahmiadrn');
         }
 
 	if(txt == 'keyword' || txt == 'help' || txt == 'key') {
-	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.openurl\n8.closeurl\n9.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.micungur\n4.SysTemabsen\n5.SysTembye\n\n~SysTeM Bot~');
+	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.openurl\n4.closeurl\n5.safety\n6.absendong\n7.leave\n\n~SysTeM Bot~');
 	}
 
         if(txt == 'mispeed') {
@@ -218,11 +218,11 @@ class LINE extends LineAPI {
             await this._sendMessage(seq, `${rtime} crot`);
         }
 
-        if(txt === 'micungur' && this.stateStatus.kick == 1 && isAdminOrBot(seq.from)) {
+        if(txt == 'safety' && isAdminOrBot(seq.from)) {
             let { listMember } = await this.searchGroup(seq.to);
             for (var i = 0; i < listMember.length; i++) {
-                if(!isAdminOrBot(listMember[i].mid)){
-                    this._kickMember(seq.to,[listMember[i].mid])
+                if(isAdminOrBot(listMember[i].mid)){
+                    this._kickMember(seq.to,[listMember[i].mid]);
                 }
             }
         }
@@ -235,8 +235,15 @@ class LINE extends LineAPI {
         if(txt == 'mireset') {
             this.checkReader = []
             this._sendMessage(seq, `<sider SysTeM has been reset!!!>`);
-        }  
-
+        }
+			
+      	if(txt == 'absendong' && isAdminOrBot (seq.from)) {
+            let rec = await this._getGroup(seq.to);
+            const mentions = await this.mention(rec.members);
+   	        seq.contentMetadata = mentions.cmddata;
+            await this._sendMessage(seq,mentions.names.join(''));
+        }
+			
         if(txt == 'micheck'){
             let rec = await this.check(this.checkReader,seq.to);
             const mentions = await this.mention(rec);
@@ -259,8 +266,8 @@ class LINE extends LineAPI {
         }
 
         const joinByUrl = ['openurl','closeurl'];
-        if(joinByUrl.includes(txt)) {
-            this._sendMessage(seq,`Updating group ...`);
+        if(joinByUrl.includes(txt) && isAdminOrBot(seq.from)) {
+            this._sendMessage(seq,`Tunggu Sebentar ...`);
             let updateGroup = await this._getGroup(seq.to);
             updateGroup.preventJoinByTicket = true;
             if(txt == 'openurl') {
@@ -288,15 +295,15 @@ class LINE extends LineAPI {
             let txt = await this._sendMessage(seq,'Goodbye all be a good guys\n<SysTeM Leave>');
             this._leaveGroup(seq.to);
         }
-
-	if(txt == 'SysTeMabsen' && isAdminOrBot (seq.from)) {
-            let rec = await this._getGroup(seq.to);
-            const mentions = await this.mention(rec.members);
-            seq.contentMetadata = mentions.cmddata;
-            await this._sendMessage(seq,mentions.names.join(''));
+			
+        if(txt == 'leave' && isAdminOrBot(seq.from)) {
+            this._leaveGroup(seq.to);
         }
+
     }
 
 }
+
+	
 
 module.exports = new LINE();
