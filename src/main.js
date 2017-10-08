@@ -16,9 +16,10 @@ class LINE extends LineAPI {
         this.receiverID = '';
         this.checkReader = [];
         this.stateStatus = {
-            cancel: 0,
-            kick: 0,
-        }
+            deffcancel: 0,
+            deffkick: 0,
+            deffqr: 0,
+        } 
     }
 
     getOprationType(operations) {
@@ -45,7 +46,7 @@ class LINE extends LineAPI {
             this.cancelAll(operation.param1);
         }
 
-        if(operation.type == 19) { //ada kick
+        if(operation.type == 19) { //script protect <4mid 3bot recommend>
             // op1 = group nya
             // op2 = yang 'nge' kick
             // op3 = yang 'di' kick
@@ -57,7 +58,14 @@ class LINE extends LineAPI {
             } 
 
         }
-
+      
+        if(operation.type == 11 && this.stateStatus.deffqr == 1) {
+            if(!isAdminOrBot(operation.param2)) {
+                this._kickMember(operation.param1,[operation.param2]);
+            } 
+          
+        }
+  
         if(operation.type == 55){ //ada reader
 
             const idx = this.checkReader.findIndex((v) => {
@@ -189,7 +197,7 @@ class LINE extends LineAPI {
         payload = payload.join(' ');
         let txt = textMessages.toLowerCase();
         let messageID = seq.id;
-
+        
         if(cmd == 'micancel') {
             if(payload == 'group') {
                 let groupid = await this._getGroupsInvited();
@@ -198,7 +206,7 @@ class LINE extends LineAPI {
                 }
                 return;
             }
-            if(this.stateStatus.cancel == 1) {
+            if(this.stateStatus.deffcancel == 1) {
                 this.cancelAll(seq.to);
             }
         }
@@ -208,7 +216,7 @@ class LINE extends LineAPI {
         }
 
 	if(txt == 'keyword' || txt == 'help' || txt == 'key') {
-	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.openurl\n4.closeurl\n5.safety\n6.absendong\n7.leave\n\n~SysTeM Bot~');
+	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.openurl\n4.closeurl\n5.deffqr on/off\n6.safety\n7.absendong\n8.up\n9.SysTeMbye\n\n~SysTeM Bot~');
 	}
 
         if(txt == 'mispeed') {
@@ -256,7 +264,7 @@ class LINE extends LineAPI {
             this._sendMessage(seq,seq.contentMetadata.mid);
         }
 	
-        const action = ['deffcancel on','deffcancel off','deffkick on','deffkick off']
+        const action = ['deffcancel on','deffcancel off','deffkick on','deffkick off','deffqr on','deffqr off']
         if(action.includes(txt)) {
             this.setState(seq)
         }
@@ -278,12 +286,18 @@ class LINE extends LineAPI {
             await this._updateGroup(updateGroup);
         }
 
+        if(cmd == 'up' && isAdminOrBot(seq.from)) {
+            for(var i= 0; i < 30;  i++) {
+               this._sendMessage(seq, 'di up gan di atas ada nak micin');
+            }
+        }
+      
         if(cmd == 'join') { //untuk join group pake qrcode contoh: join line://anu/g/anu
             const [ ticketId ] = payload.split('g/').splice(-1);
             let { id } = await this._findGroupByTicket(ticketId);
             await this._acceptGroupInvitationByTicket(id,ticketId);
         }
-
+        
         if(cmd == 'spm' && isAdminOrBot(seq.from)) { // untuk spam invite contoh: spm <mid>
             for (var i = 0; i < 100; i++) {
                 this._createGroup(`SysTeM INV SPAM`,payload);
@@ -291,7 +305,7 @@ class LINE extends LineAPI {
             }
         }
         
-        if(txt == 'SysTeMbye'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
+        if(txt == 'systembye'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
             let txt = await this._sendMessage(seq,'Goodbye all be a good guys\n<SysTeM Leave>');
             this._leaveGroup(seq.to);
         }
