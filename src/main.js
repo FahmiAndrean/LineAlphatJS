@@ -2,13 +2,16 @@ const LineAPI = require('./api');
 const { Message, OpType, Location } = require('../curve-thrift/line_types');
 let exec = require('child_process').exec;
 
-const myBot = ['u7b8f35567fee016d196112004b6e3573','u5e7cbf89cc248b791ff90cd12498d58d','u95398154aeacc458d63ca8f99dfde1e8','ue6e08af31679b313c060f69d17db9c07'];
+const myBot = ['u7b8f35567fee016d196112004b6e3573','u6b39c1ff2dfa8396706ef56ddd9f1e89','u537cd3fc00f69ae4876c0c1a330468d0','u284a00111c0fa26e742da1c1f3e9dcbc'];
 
 
 function isAdminOrBot(param) {
     return myBot.includes(param);
 }
 
+function firstToUpperCase(str) {
+    return str.substr(0, 1).toUpperCase() + str.substr(1);
+}
 
 class LINE extends LineAPI {
     constructor() {
@@ -16,9 +19,9 @@ class LINE extends LineAPI {
         this.receiverID = '';
         this.checkReader = [];
         this.stateStatus = {
-            deffcancel: 0,
-            deffkick: 0,
-            deffqr: 0,
+            cancelprotect: 0,
+            kickersprotect: 0,
+            qrprotect: 0,
         } 
     }
 
@@ -42,7 +45,7 @@ class LINE extends LineAPI {
             this.textMessage(txt,message)
         }
 
-        if(operation.type == 13 && this.stateStatus.cancel == 1) {
+        if(operation.type == 13 && this.stateStatus.cancelprotect == 1) {
             this.cancelAll(operation.param1);
         }
 
@@ -59,7 +62,7 @@ class LINE extends LineAPI {
 
         }
       
-        if(operation.type == 11 && this.stateStatus.deffqr == 1) {
+        if(operation.type == 11 && this.stateStatus.qrprotect == 1) {
             if(!isAdminOrBot(operation.param2)) {
                 this._kickMember(operation.param1,[operation.param2]);
             } 
@@ -123,16 +126,51 @@ class LINE extends LineAPI {
     }
 
     setState(seq) {
+    if(seq == 1){
+      let isinya = "Setting\n";
+      for (var k in this.stateStatus){
+                if (typeof this.stateStatus[k] !== 'function') {
+          if(this.stateStatus[k]==1){
+            isinya += " "+firstToUpperCase(k)+" => on\n";
+          }else{
+            isinya += " "+firstToUpperCase(k)+" => off\n";
+          }
+                }
+            }this._sendMessage(seq,isinya);
+    }else{
         if(isAdminOrBot(seq.from)){
             let [ actions , status ] = seq.text.split(' ');
             const action = actions.toLowerCase();
             const state = status.toLowerCase() == 'on' ? 1 : 0;
             this.stateStatus[action] = state;
-            this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
+      let isinya = "Setting\n";
+      for (var k in this.stateStatus){
+                if (typeof this.stateStatus[k] !== 'function') {
+          if(this.stateStatus[k]==1){
+            isinya += " "+firstToUpperCase(k)+" => on\n";
+          }else{
+            isinya += " "+firstToUpperCase(k)+" => off\n";
+          }
+                }
+            }
+            //this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
+      this._sendMessage(seq,isinya);
         } else {
-            this._sendMessage(seq,`<SysTeM private keyword only for FahmiAndrean>`);
-        }
+            this._sendMessage(seq,`Not permitted!`);
+        }}
     }
+  
+   // setState(seq) {
+     //   if(isAdminOrBot(seq.from)){
+         //   let [ actions , status ] = seq.text.split(' ');
+        //    const action = actions.toLowerCase();
+        //    const state = status.toLowerCase() == 'on' ? 1 : 0;
+         //   this.stateStatus[action] = state;
+       //     this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
+      //  } else {
+        //    this._sendMessage(seq,`<SysTeM private keyword only for FahmiAndrean>`);
+     //   }
+  //  }
 
     mention(listMember) {
         let mentionStrings = [''];
@@ -198,7 +236,26 @@ class LINE extends LineAPI {
         let txt = textMessages.toLowerCase();
         let messageID = seq.id;
         
-        if(cmd == 'micancel') {
+     //   var qrprotect = await this._getGroup(seq.to);
+      
+        var group = await this._getGroup(seq.to);
+      
+        var date = new Date();
+        var bulanku = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        var hariku = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum&#39;at', 'Sabtu'];
+        var tanggal = date.getDate()+1;
+        var bulan = date.getMonth(),
+            bulan = bulanku[bulan];
+        var hariIni = date.getDay()+32,
+            hariIni = hariku[hariIni];
+        var tahun = date.getFullYear();
+        var menit = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','00'];
+        var jam = ['11','12','13','14','15','16','17','18','19','20','21','22','23','00','01','02','03','04','05','06','07','08','09','10','11'];
+        var hh = jam[date.getHours()];
+        var mm = menit[date.getMinutes()];
+        var ss = menit[date.getSeconds()];
+                           
+        if(cmd == 'thiscancel') {
             if(payload == 'group') {
                 let groupid = await this._getGroupsInvited();
                 for (let i = 0; i < groupid.length; i++) {
@@ -206,27 +263,72 @@ class LINE extends LineAPI {
                 }
                 return;
             }
-            if(this.stateStatus.deffcancel == 1) {
+            if(this.stateStatus.cancelprotect == 1) {
                 this.cancelAll(seq.to);
             }
         }
 
-        if(txt == 'halo' || txt == 'respon') {
-            this._sendMessage(seq, '<SysTeM is ready>\nInstagram: @fahmiadrn\ncreator : line.me/ti/p/~fahmiadrn');
+  //      if(qrprotect.preventJoinByTicket==false&&!isAdminOrBot(seq.from)){
+     //       this._sendMessage(seq,'==We Protect This QR code==');
+            //this._kickMember(seq.to,[seq.from]);
+       //     qrprotect.preventJoinByTicket=true;
+       //     await this._updateGroup(qrprotect);
+    //    }
+      
+        if(txt == 'respon') {
+            this._sendMessage(seq, '₡•∅•₮\n\n|V.1 Active|');
         }
 
-	if(txt == 'keyword' || txt == 'help' || txt == 'key') {
-	    this._sendMessage(seq, '[Umum]:\n1.micancel\n2.respon/halo\n3.mispeed\n4.mipoint\n5.mireset\n6.micheck\n7.myid\n8.join <linkGroup>\n\n[SysTeM private keyword]:\n1.deffkick on/off\n2.deffcancel on/off\n3.openurl\n4.closeurl\n5.deffqr on/off\n6.safety\n7.absendong\n8.up\n9.SysTeMbye\n\n~SysTeM Bot~');
-	}
+        if(txt == 'cot keyword' || txt == 'cot help' || txt == 'cot key') {
+	          this._sendMessage(seq, '===============\n|₡•∅•₮|\n|For All User|\n===============\n∆ Creator\n∆ Me\n∆ thisCancel\n∆ respon\n∆ Connection\n∆ Reader\n∆ Reset Read\n∆ Check Read\n∆ gCreator\n∆ gInfo\n∆ Today\n∆ Myid\n∆ Gift\n∆ Join <linkGroup>\n\n===============\n|₡•∅•₮|\n|Admin User|\n===============\n√• Delete @\n√• KickersProtect on/off\n√• CancelProtect on/off\n√• QrProtect on/off\n√• Openurl\n√• Closeurl\n√• Konspirasi\n√• TagMember\n√• Up\n√• CotBye\n===============\n₡yber•∅peration•₮eam\nKeep Support:)\n===============');
+        }
 
-        if(txt == 'mispeed') {
+        if(txt == 'gcreator') {
+            let creator = group.creator.mid;
+            seq.contentType = 13
+            seq.contentMetadata = { mid: `${creator}` };
+            this._client.sendMessage(1, seq);
+        }
+      
+        if(txt == 'ginfo') {
+            let name = group.name;
+            let id = group.id;
+            let creator = group.creator.displayName;
+            let members = group.members.length;
+            let pending = group.invitee.length;
+            let qrcode = group.preventJoinByTicket;
+            this._sendMessage(seq, `====================\n⚫ Nama Group :\n    ${name}\n\n⚫   ID Group :\n    ${id}\n\n⚫   Creator Group :\n    ${creator}\n\n⚫   Jumlah Member :   ${members}\n\n⚫   Jumlah Pendingan :   ${pending}\n\n⚫   QR Code :\   ${qrcode}\n====================`);
+        }
+      
+        if(txt == 'creator') {
+            seq.contentType = 13
+            seq.contentMetadata = { mid: 'u7b8f35567fee016d196112004b6e3573' };
+            this._client.sendMessage(1, seq);
+        }
+      
+        if(txt == 'me') {
+    	      seq.contentType= 13
+            seq.contentMetadata = { mid: seq.from };
+            this._client.sendMessage(1, seq);
+        }
+          
+        if(txt == 'connection') {
             const curTime = (Date.now() / 1000);
-            await this._sendMessage(seq,'<SysTeM sedang berjalan>....');
+            await this._sendMessage(seq,'Checking Connection....');
             const rtime = (Date.now() / 1000) - curTime;
-            await this._sendMessage(seq, `${rtime} crot`);
+            await this._sendMessage(seq, `${rtime} second(s)`);
         }
 
-        if(txt == 'safety' && isAdminOrBot(seq.from)) {
+        if(txt == 'today') {
+            let menit = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','00'];
+            let jam = ['11','12','13','14','15','16','17','18','19','20','21','22','23','00','01','02','03','04','05','06','07','08','09','10','11'];
+            let hh = jam[date.getHours()];
+            let mm = menit[date.getMinutes()];
+            let ss = menit[date.getSeconds()];
+            this._sendMessage(seq, `📌 Pukul, ${hh} : ${mm} : ${ss} WIB\n\n🌍 ${hariIni}, ${tanggal} ${bulan} ${tahun}`);
+        }
+          
+        if(txt == 'konspirasi' && isAdminOrBot(seq.from)) {
             let { listMember } = await this.searchGroup(seq.to);
             for (var i = 0; i < listMember.length; i++) {
                 if(isAdminOrBot(listMember[i].mid)){
@@ -235,61 +337,82 @@ class LINE extends LineAPI {
             }
         }
 
-        if(txt == 'mipoint') {
-            this._sendMessage(seq, `<sider SysTeM has been set!!!>`);
+        if(txt == 'reader') {
+            this._sendMessage(seq, `Check Reader Point set!`);
             this.removeReaderByGroup(seq.to);
         }
 
-        if(txt == 'mireset') {
+        if(txt == 'reset read') {
             this.checkReader = []
-            this._sendMessage(seq, `<sider SysTeM has been reset!!!>`);
+            this._sendMessage(seq, `Check Reader Point reset!`);
         }
 			
-      	if(txt == 'absendong' && isAdminOrBot (seq.from)) {
+        
+      	if(txt == 'tagmember' && isAdminOrBot (seq.from)) {
             let rec = await this._getGroup(seq.to);
             const mentions = await this.mention(rec.members);
    	        seq.contentMetadata = mentions.cmddata;
             await this._sendMessage(seq,mentions.names.join(''));
         }
+
 			
-        if(txt == 'micheck'){
+        if(txt == 'check read'){
             let rec = await this.check(this.checkReader,seq.to);
             const mentions = await this.mention(rec);
             seq.contentMetadata = mentions.cmddata;
             await this._sendMessage(seq,mentions.names.join(''));
             
         }
-        if(seq.contentType == 13) {
-            seq.contentType = 0
-            this._sendMessage(seq,seq.contentMetadata.mid);
-        }
+          
+     //   if(seq.contentType == 13) {
+      //      seq.contentType = 0
+      //      this._sendMessage(seq,seq.contentMetadata.mid);
+    //    }
 	
-        const action = ['deffcancel on','deffcancel off','deffkick on','deffkick off','deffqr on','deffqr off']
+        const action = ['cancelprotect on','cancelprotect off','kickersprotect on','kickersprotect off','qrprotect on','qrprotect off']
         if(action.includes(txt)) {
             this.setState(seq)
         }
 	
+        if(cmd == 'delete' && isAdminOrBot(seq.from)) {
+          let target = payload.replace('@','');
+          let group = await this._getGroups([seq.to]);
+          let gm = group[0].members;
+            for(var i = 0; i < gm.length; i++){
+                if(gm[i].displayName == target){
+                        target = gm[i].mid;
+                }
+            }
+            this._kickMember(seq.to,[target]);
+        }
+
         if(txt == 'myid') {
-            this._sendMessage(seq,`SysTeM MID: ${seq.from}`);
+            this._sendMessage(seq,`This Your MID: ${seq.from}`);
         }
 
         const joinByUrl = ['openurl','closeurl'];
         if(joinByUrl.includes(txt) && isAdminOrBot(seq.from)) {
-            this._sendMessage(seq,`Tunggu Sebentar ...`);
+            this._sendMessage(seq,`Wait a minute....`);
             let updateGroup = await this._getGroup(seq.to);
             updateGroup.preventJoinByTicket = true;
             if(txt == 'openurl') {
                 updateGroup.preventJoinByTicket = false;
                 const groupUrl = await this._reissueGroupTicket(seq.to)
-                this._sendMessage(seq,`Line group = line://ti/g/${groupUrl}`);
+                this._sendMessage(seq, `QR Code = line://ti/g/${groupUrl}`);
             }
             await this._updateGroup(updateGroup);
         }
 
         if(cmd == 'up' && isAdminOrBot(seq.from)) {
-            for(var i= 0; i < 30;  i++) {
-               this._sendMessage(seq, 'di up gan di atas ada nak micin');
+            for(var i= 0; i < 4;  i++) {
+               this._sendMessage(seq, 'Berbau Micin nih\n\n\n\n\n\n\n\n\n\nDududududd (^-^)');
             }
+        }
+      
+        if(txt == 'gift') {
+           	seq.contentType = 9
+            seq.contentMetadata = {'PRDID': 'a0768339-c2d3-4189-9653-2909e9bb6f58','PRDTYPE': 'THEME','MSGTPL': '6'};
+            this._client.sendMessage(1, seq);
         }
       
         if(cmd == 'join') { //untuk join group pake qrcode contoh: join line://anu/g/anu
@@ -305,8 +428,8 @@ class LINE extends LineAPI {
             }
         }
         
-        if(txt == 'systembye'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
-            let txt = await this._sendMessage(seq,'Goodbye all be a good guys\n<SysTeM Leave>');
+        if(txt == 'cotbye'  && isAdminOrBot(seq.from)) { //untuk left dari group atau spam group contoh left <alfath>
+            let txt = await this._sendMessage(seq,'We Gonna Leaveeeeeee~~~~\nRun\n\nThx For Using (×-×)');
             this._leaveGroup(seq.to);
         }
 			
