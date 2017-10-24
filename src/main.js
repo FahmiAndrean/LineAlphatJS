@@ -47,8 +47,26 @@ class LINE extends LineAPI {
 
         if(operation.type == 13 && this.stateStatus.cancelprotect == 1) {
             this.cancelAll(operation.param1);
-        }
-
+				}
+				
+			  if(operation.type == 26) {
+					  this._client.removeAllMessages(operation.param1);
+				}
+			
+			  if(operation.type == 16) {
+					  let anu = new Message();
+					  anu.to = operation.param1;
+					  anu.text = "₡yber•∅peration•₮eam joined into the group\n\nType [cot key] for using ₡•∅•₮ Bot\n\n=====WARNING!!!=====\nSelalu Gunakan Huruf Kecil Pada Keyword"
+					  this._client.sendMessage(0, anu);
+				}
+			
+			  if(operation.type == 17) {
+					  let anu = new Message();
+					  anu.to = operation.param1;
+					  anu.text = "Welcome to the group\n\nType [cot key] for using ₡•∅•₮ Bot\n\n=====WARNING!!!=====\nSelalu Gunakan Huruf Kecil Pada Keyword"
+					  this._client.sendMessage(0, anu);
+				}
+			
         if(operation.type == 19) { //script protect <4mid 3bot recommend>
             // op1 = group nya
             // op2 = yang 'nge' kick
@@ -90,12 +108,11 @@ class LINE extends LineAPI {
             }
         }
 
-        if(operation.type == 13) { // diinvite
-            if(isAdminOrBot(operation.param2)) {
-                return this._acceptGroupInvitation(operation.param1);
-            } else {
-                return this._cancel(operation.param1,myBot);
-            }
+        if(operation.type == 13) { //notified_invite_into_group
+             this._acceptGroupInvitation(operation.param1);
+             if(!isAdminOrBot(operation.param2) && !isAdminOrBot(operation.param3)) {
+                 this._cancel(operation.param1,[operation.param3]);
+             }
         }
         this.getOprationType(operation);
     }
@@ -127,13 +144,13 @@ class LINE extends LineAPI {
 
     setState(seq) {
     if(seq == 1){
-      let isinya = "Setting\n";
+      let isinya = "========>₡•∅•₮<========\n";
       for (var k in this.stateStatus){
                 if (typeof this.stateStatus[k] !== 'function') {
           if(this.stateStatus[k]==1){
-            isinya += " "+firstToUpperCase(k)+" => on\n";
+            isinya += " "+firstToUpperCase(k)+" => ON\n";
           }else{
-            isinya += " "+firstToUpperCase(k)+" => off\n";
+            isinya += " "+firstToUpperCase(k)+" => OFF\n";
           }
                 }
             }this._sendMessage(seq,isinya);
@@ -143,20 +160,20 @@ class LINE extends LineAPI {
             const action = actions.toLowerCase();
             const state = status.toLowerCase() == 'on' ? 1 : 0;
             this.stateStatus[action] = state;
-      let isinya = "Setting\n";
+      let isinya = "========>₡•∅•₮<========\n";
       for (var k in this.stateStatus){
                 if (typeof this.stateStatus[k] !== 'function') {
           if(this.stateStatus[k]==1){
-            isinya += " "+firstToUpperCase(k)+" => on\n";
+            isinya += " "+firstToUpperCase(k)+" => ON\n";
           }else{
-            isinya += " "+firstToUpperCase(k)+" => off\n";
+            isinya += " "+firstToUpperCase(k)+" => OFF\n";
           }
                 }
             }
             //this._sendMessage(seq,`Status: \n${JSON.stringify(this.stateStatus)}`);
       this._sendMessage(seq,isinya);
         } else {
-            this._sendMessage(seq,`Not permitted!`);
+            this._sendMessage(seq,`you must have permission`);
         }}
     }
   
@@ -243,10 +260,10 @@ class LINE extends LineAPI {
         var date = new Date();
         var bulanku = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         var hariku = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum&#39;at', 'Sabtu'];
-        var tanggal = date.getDate()+1;
+        var tanggal = date.getDate();
         var bulan = date.getMonth(),
             bulan = bulanku[bulan];
-        var hariIni = date.getDay()+32,
+        var hariIni = date.getDay(),
             hariIni = hariku[hariIni];
         var tahun = date.getFullYear();
         var menit = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','00'];
@@ -280,9 +297,13 @@ class LINE extends LineAPI {
         }
 
         if(txt == 'cot keyword' || txt == 'cot help' || txt == 'cot key') {
-	          this._sendMessage(seq, '===============\n|₡•∅•₮|\n|For All User|\n===============\n∆ Creator\n∆ Me\n∆ thisCancel\n∆ respon\n∆ Connection\n∆ Reader\n∆ Reset Read\n∆ Check Read\n∆ gCreator\n∆ gInfo\n∆ Today\n∆ Myid\n∆ Gift\n∆ Join <linkGroup>\n\n===============\n|₡•∅•₮|\n|Admin User|\n===============\n√• Delete @\n√• KickersProtect on/off\n√• CancelProtect on/off\n√• QrProtect on/off\n√• Openurl\n√• Closeurl\n√• Konspirasi\n√• TagMember\n√• Up\n√• CotBye\n===============\n₡yber•∅peration•₮eam\nKeep Support:)\n===============');
+	          this._sendMessage(seq, '===============\n|₡•∅•₮|\n|For All User|\n===============\n∆ Creator\n∆ Me\n∆ thisCancel\n∆ respon\n∆ Connection\n∆ Reader\n∆ Reset Read\n∆ Check Read\n∆ gCreator\n∆ gInfo\n∆ Today\n∆ Status Bot\n∆ Myid\n∆ Gift\n∆ Join <linkGroup>\n\n===============\n|₡•∅•₮|\n|Admin User|\n===============\n√• Delete @\n√• KickersProtect on/off\n√• CancelProtect on/off\n√• QrProtect on/off\n√• Openurl\n√• Closeurl\n√• Konspirasi\n√• TagMember\n√• Up\n√• CotBye\n===============\n₡yber•∅peration•₮eam\nKeep Support:)\n===============');
         }
 
+			  if(txt == 'status bot') {
+					  this._sendMessage(seq,`| Bot : WORKING\n\n| Bot Version : 1-2-3\n\n| Owner : line.me/ti/p/~fahmiadrn\n\n========₡•∅•₮========\n${JSON.stringify(this.stateStatus)}`);
+				}
+					
         if(txt == 'gcreator') {
             let creator = group.creator.mid;
             seq.contentType = 13
